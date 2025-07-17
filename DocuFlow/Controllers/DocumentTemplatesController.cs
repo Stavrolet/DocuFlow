@@ -15,6 +15,17 @@ namespace DocuFlow.Controllers
 			this.context = context;
 		}
 
+		[HttpGet]
+		public ActionResult<IEnumerable<DocumentTemplateDto>> GetDocumentTemplates()
+		{
+			var documentTemplates = context.DocumentTemplates.ToList();
+
+			if (documentTemplates == null || documentTemplates.Count == 0)
+				return NotFound("No document templates found.");
+
+			return Ok(documentTemplates.Select(dt => dt.ToDocumentTemplateDto()));
+		}
+
 		[HttpGet("{id}")]
 		public ActionResult<DocumentTemplateDto> GetDocumentTemplateById([FromRoute] int id)
 		{
@@ -23,7 +34,7 @@ namespace DocuFlow.Controllers
 			if (documentTemplate == null)
 				return NotFound($"Document template with ID {id} not found.");
 
-			return Ok(documentTemplate.ToDocumentTemplateCreationResponeDto());
+			return Ok(documentTemplate.ToDocumentTemplateDto());
 		}
 		
 		[HttpPost]
@@ -35,7 +46,7 @@ namespace DocuFlow.Controllers
 			var documentTemplate = documentTemplateDto.ToDocumentTemplate();
 			context.DocumentTemplates.Add(documentTemplate);
 			context.SaveChanges();
-			return CreatedAtAction(nameof(GetDocumentTemplateById), new { id = documentTemplate.Id }, documentTemplate.ToDocumentTemplateCreationResponeDto());
+			return CreatedAtAction(nameof(GetDocumentTemplateById), new { id = documentTemplate.Id }, documentTemplate.ToDocumentTemplateDto());
 		}
 	}
 }

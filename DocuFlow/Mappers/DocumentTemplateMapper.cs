@@ -15,7 +15,7 @@ namespace DocuFlow.Mappers
 			};
 		}
 
-		public static DocumentTemplateDto ToDocumentTemplateCreationResponeDto(this DocumentTemplate documentTemplate)
+		public static DocumentTemplateDto ToDocumentTemplateDto(this DocumentTemplate documentTemplate)
 		{
 			return new DocumentTemplateDto
 			{

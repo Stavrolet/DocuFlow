@@ -419,6 +419,9 @@ FodyWeavers.xsd
 *.csdef
 *.csproj.user
 
+*.editorconfig
+.editorconfig
+
 bin/
 DatabaseStorageFiles/
 Migrations/
