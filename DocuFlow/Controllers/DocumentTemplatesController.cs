@@ -1,5 +1,6 @@
 ﻿using DocuFlow.Dtos.DocumentTemplate;
 using DocuFlow.Mappers;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DocuFlow.Controllers
@@ -25,7 +26,7 @@ namespace DocuFlow.Controllers
 
 			return Ok(documentTemplates.Select(dt => dt.ToDocumentTemplateDto()));
 		}
-
+			 
 		[HttpGet("{id}")]
 		public ActionResult<DocumentTemplateDto> GetDocumentTemplateById([FromRoute] int id)
 		{
@@ -47,6 +48,18 @@ namespace DocuFlow.Controllers
 			context.DocumentTemplates.Add(documentTemplate);
 			context.SaveChanges();
 			return CreatedAtAction(nameof(GetDocumentTemplateById), new { id = documentTemplate.Id }, documentTemplate.ToDocumentTemplateDto());
+		}
+
+		[HttpDelete("{id}")]
+		public ActionResult DeleteDocumentTemplate([FromRoute] int id)
+		{
+			var documentTemplate = context.DocumentTemplates.Find(id);
+			if (documentTemplate == null)
+				return NotFound($"Document template with ID {id} not found.");
+
+			context.DocumentTemplates.Remove(documentTemplate);
+			context.SaveChanges();
+			return NoContent();
 		}
 	}
 }
