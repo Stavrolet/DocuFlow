@@ -427,4 +427,4 @@ DatabaseStorageFiles/
 Migrations/
 obj/
 
-[Aa]ppsettings.json
+/DocuFlow/appsettings.json

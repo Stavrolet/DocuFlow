@@ -1,7 +1,7 @@
 ﻿using DocuFlow.Dtos.DocumentTemplate;
 using DocuFlow.Mappers;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Data.Entity;
 
 namespace DocuFlow.Controllers
 {
@@ -17,9 +17,9 @@ namespace DocuFlow.Controllers
 		}
 
 		[HttpGet]
-		public ActionResult<IEnumerable<DocumentTemplateDto>> GetDocumentTemplates()
+		public async Task<ActionResult<IEnumerable<DocumentTemplateDto>>> GetDocumentTemplates()
 		{
-			var documentTemplates = context.DocumentTemplates.ToList();
+			var documentTemplates = await context.DocumentTemplates.ToListAsync();
 
 			if (documentTemplates == null || documentTemplates.Count == 0)
 				return NotFound("No document templates found.");
@@ -28,9 +28,9 @@ namespace DocuFlow.Controllers
 		}
 			 
 		[HttpGet("{id}")]
-		public ActionResult<DocumentTemplateDto> GetDocumentTemplateById([FromRoute] int id)
+		public async Task<ActionResult<DocumentTemplateDto>> GetDocumentTemplateById([FromRoute] int id)
 		{
-			var documentTemplate = context.DocumentTemplates.Find(id);
+			var documentTemplate = await context.DocumentTemplates.FindAsync(id);
 
 			if (documentTemplate == null)
 				return NotFound($"Document template with ID {id} not found.");
@@ -39,26 +39,28 @@ namespace DocuFlow.Controllers
 		}
 		
 		[HttpPost]
-		public ActionResult<DocumentTemplateDto> CreateDocumentTemplate([FromBody] DocumentTemplateCreationDto documentTemplateDto)
+		public async Task<ActionResult<DocumentTemplateDto>> CreateDocumentTemplate([FromBody] DocumentTemplateCreationDto documentTemplateDto)
 		{
 			if (documentTemplateDto == null)
 				return BadRequest("Document template data is required.");
 
 			var documentTemplate = documentTemplateDto.ToDocumentTemplate();
-			context.DocumentTemplates.Add(documentTemplate);
+			await context.DocumentTemplates.AddAsync(documentTemplate);
 			context.SaveChanges();
+
 			return CreatedAtAction(nameof(GetDocumentTemplateById), new { id = documentTemplate.Id }, documentTemplate.ToDocumentTemplateDto());
 		}
 
 		[HttpDelete("{id}")]
-		public ActionResult DeleteDocumentTemplate([FromRoute] int id)
+		public async Task<ActionResult> DeleteDocumentTemplate([FromRoute] int id)
 		{
-			var documentTemplate = context.DocumentTemplates.Find(id);
+			var documentTemplate = await context.DocumentTemplates.FindAsync(id);
 			if (documentTemplate == null)
 				return NotFound($"Document template with ID {id} not found.");
 
 			context.DocumentTemplates.Remove(documentTemplate);
 			context.SaveChanges();
+
 			return NoContent();
 		}
 	}
