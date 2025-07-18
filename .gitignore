@@ -426,3 +426,5 @@ bin/
 DatabaseStorageFiles/
 Migrations/
 obj/
+
+[Aa]ppsettings.json
